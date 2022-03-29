@@ -92,8 +92,16 @@ export default {
         members: 'Manage Members',
         contact: 'Contact Us'
     },
-    branches: {
-        title: 'Branches',
+    myShops: {
+        title: 'My Shops',
+        add: {
+            title: 'Add New Shop',
+            name: 'Shop Name',
+            mode: 'Shop Type',
+            pro: 'Porfessional',
+            normal: 'Normal',
+            add: 'Add Shop'
+        }
     },
     onBoarding: {
         welcome: 'Welcome to Tajir',

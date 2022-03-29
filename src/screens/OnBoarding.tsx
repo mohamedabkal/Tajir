@@ -115,7 +115,7 @@ export default function OnBoarding({ navigation }: { navigation: NativeStackNavi
         // store userData locally
         updateUserData(newUserData);
         // show stores screens
-        navigation.navigate('Branches');
+        navigation.navigate('MyShops');
     }
 
     const fetchUser = async () => {

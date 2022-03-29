@@ -14,7 +14,7 @@ import useStore from '../state/useStore';
 import Sales from '../screens/Sales/Sales';
 import Inventory from '../screens/Inventory';
 import OnBoarding from '../screens/OnBoarding';
-import Branches from '../screens/Branches';
+import MyShops from '../screens/MyShops';
 import Clients from '../screens/Clients';
 import Invoices from '../screens/Invoices';
 import Suppliers from '../screens/Suppliers';
@@ -46,7 +46,7 @@ function RootNavigator() {
             {!isSignedIn ? (
                 <Stack.Group>
                     <Stack.Screen name="OnBoarding" component={OnBoarding} options={{ headerShown: false }} />
-                    <Stack.Screen name="Branches" component={Branches} options={{ headerShown: false }} />
+                    <Stack.Screen name="MyShops" component={MyShops} options={{ headerShown: false }} />
                 </Stack.Group>
             ) : (
                 <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />

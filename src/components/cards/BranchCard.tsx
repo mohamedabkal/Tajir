@@ -13,7 +13,7 @@ type Props = {
     name: string;
     admin: string;
     profit: number;
-    containerStyle: ViewStyle;
+    containerStyle?: ViewStyle;
 }
 
 export default function BranchCard(props: Props) {

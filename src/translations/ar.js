@@ -92,8 +92,16 @@ export default {
         members: 'إدارة الأعضاء',
         contact: 'تواصل معنا'
     },
-    branches: {
-        title: 'المتاجر'
+    myShops: {
+        title: 'متاجري',
+        add: {
+            title: 'إضافة متجر جديد',
+            name: 'اسم المتجر',
+            mode: 'نوع المتجر',
+            pro: 'محترف',
+            normal: 'عادي',
+            add: 'إضافة المتجر'
+        }
     },
     onBoarding: {
         welcome: 'مرحبا بك في تاجر',

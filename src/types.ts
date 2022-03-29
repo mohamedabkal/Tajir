@@ -20,3 +20,65 @@ export type RootTabParamList = {
     ClientsTab: undefined;
     SettingsTab: undefined;
 };
+
+
+export type User = {
+    id: string | null;
+    info: {
+        username: string | null;
+        phoneNumber: string | number | null;
+        expoToken: string | null;
+    },
+    stores: Store[];
+};
+
+export type Store = {
+    id: string;
+    products: Product[],
+    invoices: Invoice[],
+    sales: Sale[],
+    translations: Transaction[],
+    members: Member[],
+    type: 'pro' | 'normal'
+};
+
+export type Product = {
+    id: string;
+    productName: string;
+    buyingPrice: number;
+    qty: number;
+    invoiceID: string;
+    paid: boolean;
+};
+
+export type Sale = {
+    id: string;
+    productName: string;
+    sellingPrice: number;
+    buyingPrice: number;
+    paid: boolean;
+    clientId: string;
+};
+
+export type Invoice = {
+    id: string;
+    supplier: string;
+    invoiceNumber: number;
+    date: Date;
+    total: number;
+    paid: boolean;
+    products: Product[];
+};
+
+export type Member = {
+    id: string;
+    name: string;
+    role: string;
+};
+
+export type Transaction = {
+    id: string;
+    amount: number;
+    date: Date;
+    number: number;
+}
