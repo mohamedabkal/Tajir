@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "703174454919",
+    "project_id": "tajir-3da9b",
+    "storage_bucket": "tajir-3da9b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:703174454919:android:0c8f2ebe70b9d09f85d222",
+        "android_client_info": {
+          "package_name": "com.tajir"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "703174454919-ns5p1e5hgmklf5pk9i061g38p6vslmue.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tajir",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "703174454919-5c9jp2p2t6u65lps5k3oc1blo7qocoad.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhNK1CO2mFvV0uqXuXlqyDo4d1jJvH0sw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "703174454919-5c9jp2p2t6u65lps5k3oc1blo7qocoad.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
