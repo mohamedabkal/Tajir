@@ -41,11 +41,14 @@ const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function RootNavigator() {
     const isSignedIn = useStore(state => state.isSignedIn);
+    const userData = useStore(state => state.userData);
     return (
         <Stack.Navigator>
-            {!isSignedIn ? (
+            {!isSignedIn || userData.stores.length === 0 ? (
                 <Stack.Group>
-                    <Stack.Screen name="OnBoarding" component={OnBoarding} options={{ headerShown: false }} />
+                    {!isSignedIn && (
+                        <Stack.Screen name="OnBoarding" component={OnBoarding} options={{ headerShown: false }} />
+                    )}
                     <Stack.Screen name="MyShops" component={MyShops} options={{ headerShown: false }} />
                 </Stack.Group>
             ) : (

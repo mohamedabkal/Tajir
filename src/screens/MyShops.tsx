@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, View, Text, Image, FlatList, useWindowDimensions, } from 'react-native';
+import { SafeAreaView, StyleSheet, View, Text, Image, FlatList, } from 'react-native';
 import React from 'react';
 
 import { useTranslation } from 'react-i18next';
@@ -44,6 +44,7 @@ export default function MyShops() {
                 showsDots={false}
                 scrollEnabled={false}
             >
+
                 <View style={[styles.container, { backgroundColor: Colors[theme].tint }]}>
 
                     {/* title */}
@@ -58,7 +59,7 @@ export default function MyShops() {
                             renderItem={renderStore}
                         />
                     ) : (
-                        <View style={{ width: '100%', alignItems: 'center', marginTop: 72 }}>
+                        <View style={styles.emptyContainer}>
                             {/* empty myShops */}
                             <Image source={emptyImg} style={styles.emptyImg} />
                             <Text style={{ ...styles.empty, color: Colors[theme].muted }}>
@@ -93,10 +94,17 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         padding: 16,
     },
+    emptyContainer: {
+        width: '100%',
+        alignItems: 'center',
+        marginTop: 72
+    },
+    emptyImg: {
+        width: 150,
+        height: 120,
+        marginBottom: 24
+    },
     empty: {
         ...en.h4,
     },
-    emptyImg: {
-        width: 150, height: 120, marginBottom: 24
-    }
 });

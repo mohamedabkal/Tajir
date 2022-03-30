@@ -15,6 +15,7 @@ import SignInForm from '../components/forms/SignInForm';
 import Button from '../components/buttons/Button';
 import Carousel from '../components/Carousel';
 import CodeConfirmationFrom from '../components/forms/CodeConfirmationFrom';
+import { Snackbar } from 'react-native-paper';
 
 
 type AuthFormTypes = {
@@ -38,21 +39,27 @@ export default function OnBoarding({ navigation }: { navigation: NativeStackNavi
     // zustand state
     const userData = useStore(state => state.userData);
     const updateUserData = useStore(state => state.updateUserData);
+    const setIsSignedIn = useStore(state => state.setIsSignedIn);
+    const isSignedIn = useStore(state => state.isSignedIn);
 
     const [showCodeConfInput, setShowCodeConfInput] = useState<boolean>(false),
         [confirm, setConfirm] = useState<any>(null),
         [formData, setFormData] = useState<AuthFormTypes>(defaultFormData),
         [loading, setLoading] = useState<boolean>(false),
         [showLoginForm, setShowLoginForm] = useState(false),
-        [savePhoneNumber, setSavePhoneNumber] = useState<string>('');
+        [savePhoneNumber, setSavePhoneNumber] = useState<string>(''),
+        [toastVisible, setToastVisible] = useState<boolean>(false),
+        [toastMessage, setToastMessage] = useState<string>('');
 
 
     useEffect(() => {
         auth().onAuthStateChanged((user) => {
-            if (user) {
+            if (user?.uid) {
                 if (showLoginForm) {
+                    console.log('>>>>>>>> FETCH USER DATA', showLoginForm)
                     fetchUser();
                 } else {
+                    console.log('>>>>>>>> CREATE USER DATA', showLoginForm)
                     createUserData();
                 }
             }
@@ -105,26 +112,38 @@ export default function OnBoarding({ navigation }: { navigation: NativeStackNavi
             ...userData,
             id: uuid.v4(),
             info: {
-                firstName: formData.firstName,
-                lastName: formData.lastName,
-                phoneNumber: savePhoneNumber,
+                firstName: 'Mohammad', //formData.firstName,
+                lastName: 'Abkal', //formData.lastName,
+                phoneNumber: '+212 077-034-0780', //savePhoneNumber,
             },
         };
         // add user to DB
         await addUserToDB(newUserData);
         // store userData locally
         updateUserData(newUserData);
+        setIsSignedIn(true);
         // show stores screens
-        navigation.navigate('MyShops');
+        navigation.replace('MyShops');
     }
 
     const fetchUser = async () => {
-        try {
-            const fetchData = await fetchUserData(savePhoneNumber);
-
-        } catch (err) {
-            __DEV__ && console.error(err);
-            setLoading(false);
+        if (!isSignedIn) {
+            try {
+                const fetchData = await fetchUserData(savePhoneNumber);
+                if (fetchData) {
+                    const newUserData = fetchData;
+                    // store userData locally
+                    updateUserData(newUserData);
+                    setIsSignedIn(true);
+                } else {
+                    setToastVisible(true);
+                    setToastMessage('Phone number was not found!');
+                    auth().signOut();
+                }
+            } catch (err) {
+                __DEV__ && console.error(err);
+                setLoading(false);
+            }
         }
     }
 
@@ -164,6 +183,16 @@ export default function OnBoarding({ navigation }: { navigation: NativeStackNavi
                         titleStyle={{ color: Colors[theme].accent }}
                     />
                 )}
+
+                <Snackbar
+                    visible={toastVisible}
+                    onDismiss={() => setToastVisible(false)}
+                    action={{
+                        label: 'Close',
+                        onPress: () => setToastVisible(false)
+                    }}>
+                    {toastMessage}
+                </Snackbar>
 
             </View>
         </SafeAreaView>

@@ -1,6 +1,6 @@
+import React from 'react';
 import { SafeAreaView, StyleSheet, Text, View, FlatList } from 'react-native';
 
-;
 import { useTranslation } from "react-i18next";
 
 import Colors from '../constants/Colors';
