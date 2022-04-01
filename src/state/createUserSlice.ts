@@ -5,30 +5,35 @@ import { User } from '../types';
 export interface UserSlice {
     userData: User;
     updateUserData: (newUserData: User) => void;
+    deleteUserState: () => void;
 }
 
 const createUserSlice = (set: SetState<MyState>, get: GetState<MyState>) => ({
     userData: {
-        id: null,
+        id: '',
         info: {
-            firstName: null,
-            lastName: null,
-            phoneNumber: null,
+            firstName: '',
+            lastName: '',
+            phoneNumber: '',
         },
-        expoToken: null,
+        expoToken: '',
         stores: [],
     },
-    updateUserData: (newUserData: User) => set((state) => {
-        ({
-            userData: {
-                ...state.userData,
-                id: newUserData.id,
-                info: newUserData.info,
-                expoToken: newUserData.expoToken,
-                stores: newUserData.stores,
-            }
-        })
-    })
+    updateUserData: (newUserData: User) => set((state) => ({
+        userData: { ...newUserData }
+    })),
+    deleteUserState: () => set(() => ({
+        userData: {
+            id: '',
+            info: {
+                firstName: '',
+                lastName: '',
+                phoneNumber: '',
+            },
+            expoToken: '',
+            stores: [],
+        },
+    }))
 });
 
 export default createUserSlice;

@@ -21,7 +21,7 @@ export const updateUserData = async (userData: User) => {
     try {
         await firestore()
             .collection('users')
-            .doc(id?.toString())
+            .doc(id)
             .set(userData)
         __DEV__ && console.log('✔✔ user data updated');
     } catch (error) {

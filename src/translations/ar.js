@@ -100,7 +100,7 @@ export default {
             mode: 'نوع المتجر',
             pro: 'محترف',
             normal: 'عادي',
-            add: 'إضافة المتجر'
+            btn: 'إضافة المتجر'
         }
     },
     onBoarding: {

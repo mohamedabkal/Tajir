@@ -11,13 +11,10 @@ import AssetsManager from '../assets/AssetsManager';
 import TopProduct from '../components/cards/TopProduct';
 import Chart from '../components/cards/Chart';
 import Transactions from '../components/data/Transactions';
-import useStore from '../state/useStore';
 
 export default function Home() {
     const theme = useColorScheme();
     const { t } = useTranslation();
-    const userData = useStore(state => state.userData);
-    console.log(userData)
 
     // TODO: fix arabic issue
     const months = t('common.days', { returnObjects: true })

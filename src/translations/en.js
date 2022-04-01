@@ -100,7 +100,7 @@ export default {
             mode: 'Shop Type',
             pro: 'Porfessional',
             normal: 'Normal',
-            add: 'Add Shop'
+            btn: 'Add Shop'
         }
     },
     onBoarding: {

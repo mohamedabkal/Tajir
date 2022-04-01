@@ -22,8 +22,7 @@ type FormData = {
 }
 
 type Props = {
-    loading: boolean;
-    submit: (data: FormData) => void;
+    submit: (data: FormData) => Promise<void>;
     goBack: () => void;
 }
 
@@ -39,7 +38,7 @@ const defaultValues = {
 
 
 export default function AddNewShopForm(props: Props) {
-    const { loading, goBack } = props;
+    const { goBack, submit } = props;
     const theme = useColorScheme();
     const { t } = useTranslation();
 
@@ -58,8 +57,6 @@ export default function AddNewShopForm(props: Props) {
             return defaultValues;
         }, [])
     });
-
-    const submit = (data: FormData) => console.log(data);
 
     const customSetValue = useCallback((fieldName: any, newValue: any) => {
         newValue !== getValues(fieldName) ? setValue(fieldName, newValue) : null;
@@ -129,7 +126,6 @@ export default function AddNewShopForm(props: Props) {
                 title={t('myShops.add.btn')}
                 onPress={handleSubmit(submit)}
                 containerStyle={{ marginTop: 32 }}
-                loading={loading}
             />
 
         </ScrollView>

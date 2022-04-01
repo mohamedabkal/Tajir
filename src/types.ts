@@ -23,17 +23,19 @@ export type RootTabParamList = {
 
 
 export type User = {
-    id: string | null;
+    id: string;
     info: {
-        username: string | null;
-        phoneNumber: string | number | null;
-        expoToken: string | null;
+        firstName: string;
+        lastName: string;
+        phoneNumber: string;
     },
-    stores: Store[];
+    expoToken: string;
+    stores: string[];
 };
 
 export type Store = {
     id: string;
+    name: string,
     products: Product[],
     invoices: Invoice[],
     sales: Sale[],
