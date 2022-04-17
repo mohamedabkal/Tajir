@@ -41,6 +41,7 @@ export type Store = {
     sales: Sale[],
     translations: Transaction[],
     members: Member[],
+    clients: Client[],
     type: 'pro' | 'normal'
 };
 
@@ -83,4 +84,10 @@ export type Transaction = {
     amount: number;
     date: Date;
     number: number;
+};
+
+export type Client = {
+    id: string;
+    name: string;
+    phoneNumber: string;
 }

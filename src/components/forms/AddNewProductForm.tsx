@@ -118,8 +118,8 @@ export default function AddNewProductForm(props: Props) {
                 name='productName'
                 defaultValue='Product'
                 control={control}
-                label={t('sales.modal.product_label')}
-                placeholder={t('sales.modal.product')}
+                label={t('sales.add.product_label')}
+                placeholder={t('sales.add.product')}
                 bgColor={Colors[theme].bright}
             />
 
@@ -128,8 +128,8 @@ export default function AddNewProductForm(props: Props) {
                 name='buyingPrice'
                 defaultValue='0'
                 control={control}
-                label={t('sales.modal.buying_label')}
-                placeholder={t('sales.modal.price')}
+                label={t('sales.add.buying_label')}
+                placeholder={t('sales.add.price')}
                 priceInput
                 bgColor={Colors[theme].bright}
             />
@@ -142,13 +142,13 @@ export default function AddNewProductForm(props: Props) {
                 render={({ field: { value } }) => (
                     <View style={styles.paid}>
                         <CheckBox
-                            label={t('sales.modal.paid')}
+                            label={t('sales.add.paid')}
                             color={value ? Colors[theme].success : Colors[theme].secondary}
                             checked={value}
                             onPress={() => customSetValue('paid', true)}
                         />
                         <CheckBox
-                            label={t('sales.modal.not_paid')}
+                            label={t('sales.add.not_paid')}
                             color={value ? Colors[theme].secondary : Colors[theme].error}
                             checked={!value}
                             onPress={() => customSetValue('paid', false)}

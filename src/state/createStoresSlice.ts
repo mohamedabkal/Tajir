@@ -6,15 +6,29 @@ export interface StoresSlice {
     stores: Store[];
     updateStoresData: (stores: Store[]) => void;
     deleteStoresState: () => void;
-    currentStore: Store | null,
+    currentStore: Store,
     setCurrentStore: (data: Store) => void;
+};
+
+
+const fakeStore = {
+    id: '',
+    name: '',
+    products: [],
+    invoices: [],
+    sales: [],
+    translations: [],
+    members: [],
+    clients: [],
+    type: 'normal',
 }
+
 
 const createStoresSlice = (set: SetState<MyState>, get: GetState<MyState>) => ({
     stores: [],
     updateStoresData: (stores: Store[]) => set((state) => ({ stores: [...stores] })),
     deleteStoresState: () => set(() => ({ stores: [] })),
-    currentStore: null,
+    currentStore: fakeStore,
     setCurrentStore: (data: Store) => set((state) => ({
         currentStore: { ...data }
     }))

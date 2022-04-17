@@ -27,7 +27,8 @@ export default {
         month: 'Month',
         year: 'Year',
         total: 'Total',
-        modal: {
+        empty: 'No sales have been reported',
+        add: {
             title: 'Add New Sale',
             product_label: 'Product Name',
             pick_product: 'Pick Product',
@@ -37,7 +38,8 @@ export default {
             buying_label: 'Buying Price',
             paid: 'Paid',
             not_paid: 'Not Paid',
-            pick_client: 'Pick Client',
+            client: 'Client',
+            pick_client: 'Select Client',
             btn: 'Add Sale'
         }
     },
@@ -67,6 +69,8 @@ export default {
     },
     clients: {
         title: 'Clients',
+        empty: 'No clients have been added!',
+        not_found: 'Sorry! No result found :(',
         add: {
             title: 'Add New Client',
             name: 'Name',
@@ -94,6 +98,7 @@ export default {
     },
     myShops: {
         title: 'My Shops',
+        empty: 'No stores have benn added',
         add: {
             title: 'Add New Shop',
             name: 'Shop Name',

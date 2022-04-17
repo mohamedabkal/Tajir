@@ -117,7 +117,7 @@ export default function MyShops() {
                                 marginBottom: 24
                             }} />
                             <Text style={{ ...styles.empty, color: Colors[theme].muted }}>
-                                No stores have benn added
+                                {t('myShops.empty')}
                             </Text>
                         </View>
                     )}

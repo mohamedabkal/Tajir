@@ -27,7 +27,8 @@ export default {
         month: 'الشهر',
         year: 'السنة',
         total: 'المجموع',
-        modal: {
+        empty: 'لم يتم تسجيل أي مبيعات',
+        add: {
             title: 'أضف مبيعة جديدة',
             product_label: 'اسم المنتج',
             pick_product: 'اختر المنتج',
@@ -37,6 +38,7 @@ export default {
             buying_label: 'ثمن الشراء',
             paid: 'تم الدفع',
             not_paid: 'لم يدفع',
+            client: 'الزبون',
             pick_client: 'اختر المشتري',
             btn: 'أضف'
         }
@@ -67,6 +69,8 @@ export default {
     },
     clients: {
         title: 'الزبناء',
+        empty: 'لم يتم إضافة أي زبون!',
+        not_found: 'معذرة! لم يتم العثور على أي نتائج :(',
         add: {
             title: 'أضف زبون جديد',
             name: 'الإسم',
@@ -94,6 +98,7 @@ export default {
     },
     myShops: {
         title: 'متاجري',
+        empty: 'لم يتم إضافة أي متجر',
         add: {
             title: 'إضافة متجر جديد',
             name: 'اسم المتجر',

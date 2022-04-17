@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { FlatList, SafeAreaView, StyleSheet, View, Text, ViewStyle, useWindowDimensions } from 'react-native';
 
-;
 import { Picker } from '@react-native-picker/picker';
 import { useTranslation } from "react-i18next";
 import { DataTable } from 'react-native-paper';
 import Carousel from 'pinar';
+import uuid from 'react-native-uuid';
 
 import { Status, TableText } from '../../components/data/TableRow';
 import Colors from '../../constants/Colors';
@@ -14,52 +14,12 @@ import { en } from '../../assets/Typography';
 import FloatingBtn from '../../components/buttons/FloatingBtn';
 import PickerComp from '../../components/Inputs/PickerComp';
 import AddNewSaleForm from '../../components/forms/AddNewSaleForm';
+import useStore from '../../state/useStore';
+import Empty from '../../components/cards/Empty';
+import { Sale } from '../../types';
+import SelectClientForm from '../../components/forms/SelectClientForm';
+import AddNewClientForm from '../../components/forms/AddNewClientForm';
 
-
-const salesData = [
-    {
-        product: 'Nike Shoes',
-        status: 'unpaid',
-        date: '2021/12/23',
-        price: 299,
-    },
-    {
-        product: 'Iphone 12 Pro',
-        status: 'paid',
-        date: '2021/12/20',
-        price: 199,
-    },
-    {
-        product: 'Xbox',
-        status: 'paid',
-        date: '2021/12/20',
-        price: 159,
-    },
-    {
-        product: 'IPad Pro',
-        status: 'paid',
-        date: '2021/12/19',
-        price: 399,
-    },
-    {
-        product: 'Iphone 12 Pro',
-        status: 'paid',
-        date: '2021/12/20',
-        price: 199,
-    },
-    {
-        product: 'Xbox',
-        status: 'unpaid',
-        date: '2021/12/20',
-        price: 159,
-    },
-    {
-        product: 'IPad Pro',
-        status: 'paid',
-        date: '2021/12/19',
-        price: 399,
-    },
-];
 
 
 export default function Sales() {
@@ -70,7 +30,13 @@ export default function Sales() {
 
     const [timeRange, setTimeRange] = useState('today');
 
+    // zustand
+    const currentStore = useStore(state => state.currentStore);
+    const setCurrentStore = useStore(state => state.setCurrentStore);
+
+
     const updateTimeRange = React.useCallback((range: string) => setTimeRange(range), [timeRange]);
+    const openFTB = () => carouselRef?.scrollToNext();
 
     const tableHeaderBg: ViewStyle = React.useMemo(() => ({
         backgroundColor: Colors[theme].subAccent,
@@ -81,6 +47,47 @@ export default function Sales() {
         backgroundColor: Colors[theme].bright,
         borderBottomColor: Colors[theme].shade,
     }), []);
+
+
+    const addNewStore = async (data: Sale) => {
+        carouselRef?.scrollToPrev();
+
+        // 1. generate new store data
+        const newSale: Sale = {
+            id: uuid.v4().toString(),
+            name: data.name,
+            products: [],
+            invoices: [],
+            sales: [],
+            translations: [],
+            members: [{ name: userData.info.firstName, id: userData.id, role: 'owner' }],
+            type: data.mode,
+        };
+
+        // 2. add store id to userData
+        const userStoresData = [...userData.stores];
+        userStoresData.push(newSale.id);
+        const newUserData: User = {
+            ...userData,
+            stores: userStoresData,
+        };
+
+        // 3. check if store already saved
+        const isDuplicate = stores.some((store: Store) => store.id === newSale.id);
+
+        // 4. save data
+        if (!isDuplicate) {
+            // add store to db
+            await addStoreToDB(newSale);
+            // add store to local data
+            updateStoresData([...stores, newSale]);
+            setCurrentStore(newSale);
+            // update user data
+            await updateUserData(newUserData);
+            updateUserState(newUserData);
+        }
+    }
+
 
     const header = () => {
         return (
@@ -99,8 +106,8 @@ export default function Sales() {
                     </PickerComp>
                     {/*  */}
                     <View style={{ flexDirection: 'row', marginBottom: 16 }}>
-                        <Status status='paid' label={t('sales.modal.paid')} />
-                        <Status status='unpaid' label={t('sales.modal.not_paid')} />
+                        <Status status='paid' label={t('sales.add.paid')} />
+                        <Status status='unpaid' label={t('sales.add.not_paid')} />
                     </View>
                 </View>
 
@@ -136,7 +143,6 @@ export default function Sales() {
         )
     };
 
-    const openFTB = () => carouselRef?.scrollToNext();
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -144,28 +150,57 @@ export default function Sales() {
                 ref={carousel => carousel ? carouselRef = carousel : null}
                 showsControls={false}
                 showsDots={false}
-                width={useWindowDimensions().width}
-                height={useWindowDimensions().height - 60}
                 scrollEnabled={false}
             >
 
                 {/* sales screen */}
                 <View style={[styles.containerStyle, { backgroundColor: Colors[theme].tint }]}>
-                    <FlatList
-                        data={salesData}
-                        renderItem={renderSales}
-                        keyExtractor={(item, index) => index.toString()}
-                        ListHeaderComponent={header}
-                        ListFooterComponent={footer}
-                        showsVerticalScrollIndicator={false}
-                        contentContainerStyle={{ paddingVertical: 24, paddingHorizontal: 16 }}
-                    />
+                    {currentStore?.sales.length > 0 ? (
+                        <FlatList
+                            data={currentStore?.sales}
+                            renderItem={renderSales}
+                            keyExtractor={(item, index) => index.toString()}
+                            ListHeaderComponent={header}
+                            ListFooterComponent={footer}
+                            showsVerticalScrollIndicator={false}
+                            contentContainerStyle={{ paddingVertical: 24, paddingHorizontal: 16 }}
+                        />
+                    ) : (
+                        <View style={{ paddingHorizontal: 16, paddingVertical: 24, }}>
+                            <Text style={[styles.title, { color: Colors[theme].primary }]}>
+                                {t('sales.title')}
+                            </Text>
+                            <Empty icon='bar-chart-2' text={t('sales.empty')} />
+                        </View>
+                    )}
                     <FloatingBtn onPress={openFTB} />
                 </View>
 
                 {/* add new sale */}
                 <View style={[styles.containerStyle, { backgroundColor: Colors[theme].tint }]}>
                     <AddNewSaleForm
+                        loading={false}
+                        submit={(data) => console.log(data)}
+                        currentStore={currentStore}
+                        goBack={() => carouselRef?.scrollToPrev()}
+                        showNext={() => carouselRef?.scrollToNext()}
+                    />
+                </View>
+
+                {/* select client */}
+                <View style={[styles.containerStyle, { backgroundColor: Colors[theme].tint }]}>
+                    <SelectClientForm
+                        loading={false}
+                        saveClient={(data) => console.log(data)}
+                        currentStore={currentStore}
+                        goBack={() => carouselRef?.scrollToPrev()}
+                        showNext={() => carouselRef?.scrollToNext()}
+                    />
+                </View>
+
+                {/* if no client => add new client */}
+                <View style={[styles.containerStyle, { backgroundColor: Colors[theme].tint }]}>
+                    <AddNewClientForm
                         loading={false}
                         submit={(data) => console.log(data)}
                         goBack={() => carouselRef?.scrollToPrev()}

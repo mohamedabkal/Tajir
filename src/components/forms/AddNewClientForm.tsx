@@ -16,7 +16,7 @@ import { IconButton } from 'react-native-paper';
 
 type FormValues = {
     name: string;
-    phoneNumber: number;
+    phoneNumber: string;
 }
 
 type Props = {
@@ -24,6 +24,7 @@ type Props = {
     goBack: () => void;
     submit: (data: FormValues) => void;
     isSupplierForm?: boolean;
+    hideBackButton?: boolean;
 }
 
 
@@ -32,16 +33,18 @@ const schema = yup.object().shape({
         .string()
         .required(),
     phoneNumber: yup
-        .number()
-        .min(8)
-        .integer()
+        .string()
+        .test({
+            name: 'len',
+            test: (value) => value?.toString().length === 10,
+        })
         .required(),
 });
 
 
 const defaultValues: FormValues = {
     name: '',
-    phoneNumber: 0,
+    phoneNumber: '',
 }
 
 
@@ -73,13 +76,15 @@ export default function AddNewClientForm(props: Props) {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.container}>
 
-            <IconButton
-                icon='arrow-left'
-                color={Colors[theme].primary}
-                size={20}
-                onPress={goBack}
-                style={{ marginBottom: 16 }}
-            />
+            {!props.hideBackButton && (
+                <IconButton
+                    icon='arrow-left'
+                    color={Colors[theme].primary}
+                    size={20}
+                    onPress={goBack}
+                    style={{ marginBottom: 16 }}
+                />
+            )}
 
             {/* title */}
             <Text style={{ ...styles.title, color: Colors[theme].primary }}>
