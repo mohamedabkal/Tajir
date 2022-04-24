@@ -14,6 +14,7 @@ import { Client, Store } from '../../types';
 import { TableText } from '../data/TableRow';
 import TextInput from '../Inputs/TextInput';
 import Empty from '../cards/Empty';
+import GoBackIcon from '../buttons/GoBackIcon';
 
 
 
@@ -91,9 +92,9 @@ const DATA = [
 
 
 export default function SelectClientForm(props: Props) {
-    const { loading, goBack, saveClient, currentStore, showNext } = props;
+    const { loading, goBack, currentStore, showNext } = props;
 
-    const [data] = useState(DATA);
+    const [data] = useState(currentStore.clients);
     const [filterData, setFilterData] = useState(DATA);
     const [selectedClient, setSelectedClient] = useState<Client>();
     const [clientName, setClientName] = useState<string>('');
@@ -114,7 +115,10 @@ export default function SelectClientForm(props: Props) {
     useEffect(() => filterClients(), [clientName]);
 
 
+    const saveClient = () => props.saveClient(selectedClient);
+
     const { control } = useForm();
+
 
     const filterClients = () => {
         if (clientName) {
@@ -185,13 +189,7 @@ export default function SelectClientForm(props: Props) {
             {/* select client */}
             <View style={{ paddingHorizontal: 24 }}>
                 <View style={styles.searchContainer}>
-                    <IconButton
-                        icon='arrow-left'
-                        color={Colors[theme].primary}
-                        size={20}
-                        onPress={goBack}
-                        style={{ marginBottom: 16, }}
-                    />
+                    <GoBackIcon goBack={goBack} />
                     <TextInput
                         name='clientName'
                         control={control}
@@ -215,12 +213,21 @@ export default function SelectClientForm(props: Props) {
                         style={{ marginTop: 116 }}
                         ListHeaderComponent={renderHeader}
                         ListFooterComponent={() => (
-                            <Button
-                                title={t('sales.add.pick_client')}
-                                onPress={saveClient}
-                                containerStyle={{ marginTop: 32 }}
-                                loading={loading}
-                            />
+                            <>
+                                <Button
+                                    title={t('sales.add.pick_client')}
+                                    onPress={saveClient}
+                                    containerStyle={{ marginTop: 32 }}
+                                    loading={loading}
+                                />
+                                <Button
+                                    title={t('clients.add.title')}
+                                    onPress={showNext}
+                                    containerStyle={{ backgroundColor: Colors[theme].subAccent, marginTop: 16 }}
+                                    titleStyle={{ color: Colors[theme].accent }}
+                                    loading={loading}
+                                />
+                            </>
                         )}
                     />
                 ) : (

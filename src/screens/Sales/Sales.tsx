@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FlatList, SafeAreaView, StyleSheet, View, Text, ViewStyle, useWindowDimensions } from 'react-native';
+import { FlatList, SafeAreaView, StyleSheet, View, Text, ViewStyle, useWindowDimensions, I18nManager } from 'react-native';
 
 import { Picker } from '@react-native-picker/picker';
 import { useTranslation } from "react-i18next";
@@ -19,6 +19,7 @@ import Empty from '../../components/cards/Empty';
 import { Sale } from '../../types';
 import SelectClientForm from '../../components/forms/SelectClientForm';
 import AddNewClientForm from '../../components/forms/AddNewClientForm';
+import { scrollToNext, scrollToPrev } from '../../utils/carouselNavigationl';
 
 
 
@@ -35,8 +36,13 @@ export default function Sales() {
     const setCurrentStore = useStore(state => state.setCurrentStore);
 
 
+    // Carousel navigation
+    const showNext = () => scrollToNext(carouselRef, I18nManager.isRTL);
+    const goBack = () => scrollToPrev(carouselRef, I18nManager.isRTL);
+
+
     const updateTimeRange = React.useCallback((range: string) => setTimeRange(range), [timeRange]);
-    const openFTB = () => carouselRef?.scrollToNext();
+    const openFTB = () => showNext();
 
     const tableHeaderBg: ViewStyle = React.useMemo(() => ({
         backgroundColor: Colors[theme].subAccent,
@@ -59,7 +65,7 @@ export default function Sales() {
             products: [],
             invoices: [],
             sales: [],
-            translations: [],
+            transactions: [],
             members: [{ name: userData.info.firstName, id: userData.id, role: 'owner' }],
             type: data.mode,
         };
@@ -151,6 +157,7 @@ export default function Sales() {
                 showsControls={false}
                 showsDots={false}
                 scrollEnabled={false}
+                index={I18nManager.isRTL ? 3 : 0}
             >
 
                 {/* sales screen */}
@@ -182,8 +189,8 @@ export default function Sales() {
                         loading={false}
                         submit={(data) => console.log(data)}
                         currentStore={currentStore}
-                        goBack={() => carouselRef?.scrollToPrev()}
-                        showNext={() => carouselRef?.scrollToNext()}
+                        goBack={goBack}
+                        showNext={showNext}
                     />
                 </View>
 
@@ -193,8 +200,8 @@ export default function Sales() {
                         loading={false}
                         saveClient={(data) => console.log(data)}
                         currentStore={currentStore}
-                        goBack={() => carouselRef?.scrollToPrev()}
-                        showNext={() => carouselRef?.scrollToNext()}
+                        goBack={goBack}
+                        showNext={showNext}
                     />
                 </View>
 
@@ -203,7 +210,7 @@ export default function Sales() {
                     <AddNewClientForm
                         loading={false}
                         submit={(data) => console.log(data)}
-                        goBack={() => carouselRef?.scrollToPrev()}
+                        goBack={goBack}
                     />
                 </View>
 

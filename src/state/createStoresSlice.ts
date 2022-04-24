@@ -17,7 +17,7 @@ const fakeStore = {
     products: [],
     invoices: [],
     sales: [],
-    translations: [],
+    transactions: [],
     members: [],
     clients: [],
     type: 'normal',

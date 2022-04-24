@@ -39,7 +39,7 @@ export type Store = {
     products: Product[],
     invoices: Invoice[],
     sales: Sale[],
-    translations: Transaction[],
+    transactions: Transaction[],
     members: Member[],
     clients: Client[],
     type: 'pro' | 'normal'

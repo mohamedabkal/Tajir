@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { BackHandler, I18nManager, ScrollView, StyleSheet, Text, View, ViewStyle } from 'react-native';
+import React, { useCallback, useEffect, } from 'react'
+import { BackHandler, ScrollView, StyleSheet, Text, View, ViewStyle } from 'react-native';
 
 import { useTranslation } from 'react-i18next';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -14,8 +14,8 @@ import CheckBox from '../buttons/CheckBox';
 import { Controller, useForm } from 'react-hook-form';
 import { Picker } from '@react-native-picker/picker';
 import PickerComp from '../Inputs/PickerComp';
-import { IconButton } from 'react-native-paper';
 import { Store } from '../../types';
+import GoBackIcon from '../buttons/GoBackIcon';
 
 
 type FormData = {
@@ -84,13 +84,7 @@ export default function AddNewSaleForm(props: Props) {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.container}>
 
-            <IconButton
-                icon='arrow-left'
-                color={Colors[theme].primary}
-                size={20}
-                onPress={goBack}
-                style={{ marginBottom: 16 }}
-            />
+            <GoBackIcon goBack={goBack} />
 
             {/* title */}
             <Text style={{ ...styles.title, color: Colors[theme].primary }}>

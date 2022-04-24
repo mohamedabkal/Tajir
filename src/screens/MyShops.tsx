@@ -45,8 +45,9 @@ export default function MyShops() {
             products: [],
             invoices: [],
             sales: [],
-            translations: [],
+            transactions: [],
             members: [{ name: userData.info.firstName, id: userData.id, role: 'owner' }],
+            clients: [],
             type: data.mode,
         };
 

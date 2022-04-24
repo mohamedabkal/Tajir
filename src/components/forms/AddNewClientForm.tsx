@@ -12,6 +12,7 @@ import Colors from '../../constants/Colors';
 import { en } from '../../assets/Typography';
 import useColorScheme from '../../hooks/useColorScheme';
 import { IconButton } from 'react-native-paper';
+import GoBackIcon from '../buttons/GoBackIcon';
 
 
 type FormValues = {
@@ -33,11 +34,11 @@ const schema = yup.object().shape({
         .string()
         .required(),
     phoneNumber: yup
-        .string()
-        .test({
-            name: 'len',
-            test: (value) => value?.toString().length === 10,
-        })
+        .number()
+        // .test({
+        //     name: 'len',
+        //     test: (value) => value?.toString().length === 10,
+        // })
         .required(),
 });
 
@@ -53,7 +54,7 @@ export default function AddNewClientForm(props: Props) {
 
     const theme = useColorScheme();
     const { t } = useTranslation();
-    const { handleSubmit, control, } = useForm({
+    const { handleSubmit, control, watch } = useForm({
         resolver: yupResolver(schema),
         defaultValues: useMemo(() => {
             return defaultValues;
@@ -77,13 +78,7 @@ export default function AddNewClientForm(props: Props) {
             contentContainerStyle={styles.container}>
 
             {!props.hideBackButton && (
-                <IconButton
-                    icon='arrow-left'
-                    color={Colors[theme].primary}
-                    size={20}
-                    onPress={goBack}
-                    style={{ marginBottom: 16 }}
-                />
+                <GoBackIcon goBack={goBack} />
             )}
 
             {/* title */}
@@ -112,7 +107,7 @@ export default function AddNewClientForm(props: Props) {
 
             <Button
                 title={isSupplierForm ? t('suppliers.add.add_supplier') : t('clients.add.add_client')}
-                onPress={handleSubmit(submit)}
+                onPress={handleSubmit(data => console.log(data))}
                 containerStyle={{ marginTop: 32 }}
                 loading={loading}
             />
