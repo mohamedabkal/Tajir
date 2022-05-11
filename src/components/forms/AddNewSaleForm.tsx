@@ -14,7 +14,7 @@ import CheckBox from '../buttons/CheckBox';
 import { Controller, useForm } from 'react-hook-form';
 import { Picker } from '@react-native-picker/picker';
 import PickerComp from '../Inputs/PickerComp';
-import { Store } from '../../types';
+import { Client, Store } from '../../types';
 import GoBackIcon from '../buttons/GoBackIcon';
 
 
@@ -28,10 +28,11 @@ type FormData = {
 
 type Props = {
     loading?: boolean;
-    submit: (data: FormData) => void;
+    submit: (data: FormData) => Promise<void>;
     goBack: () => void;
     showNext: () => void;
     currentStore: Store;
+    selectedClient: Client;
 }
 
 const schema = yup.object().shape({
@@ -56,6 +57,13 @@ export default function AddNewSaleForm(props: Props) {
     const theme = useColorScheme();
     const { t } = useTranslation();
 
+    const { handleSubmit, control, setValue, getValues } = useForm<FormData>({
+        resolver: yupResolver(schema),
+        defaultValues: React.useMemo(() => {
+            return defaultValues;
+        }, [])
+    });
+
     useEffect(() => {
         const backAction = () => {
             goBack();
@@ -65,12 +73,13 @@ export default function AddNewSaleForm(props: Props) {
         return () => backHandler.remove();
     }, []);
 
-    const { handleSubmit, control, setValue, getValues } = useForm<FormData>({
-        resolver: yupResolver(schema),
-        defaultValues: React.useMemo(() => {
-            return defaultValues;
-        }, [])
-    });
+    // listener for when user select a client
+    useEffect(() => {
+        if (props.selectedClient?.id) {
+            setValue('clientId', props.selectedClient.id);
+        }
+    }, [props.selectedClient]);
+
 
     const pickProduct = (value: string) => value !== '0' ? customSetValue('productName', value) : null;
 
@@ -180,18 +189,12 @@ export default function AddNewSaleForm(props: Props) {
                                             <Text style={[styles.label, { color: Colors[theme].secondary }]}>
                                                 {t('sales.add.pick_client')}
                                             </Text>
-                                            {value ? (
-                                                <Text style={[styles.label, { color: Colors[theme].accent }]}>
-                                                    {value}
-                                                </Text>
-                                            ) : (
-                                                <Button
-                                                    title={t('sales.add.pick_client')}
-                                                    containerStyle={{ backgroundColor: Colors[theme].subAccent }}
-                                                    titleStyle={{ color: Colors[theme].accent }}
-                                                    onPress={showNext}
-                                                />
-                                            )}
+                                            <Button
+                                                title={props.selectedClient?.name || t('sales.add.pick_client')}
+                                                containerStyle={{ backgroundColor: Colors[theme].subAccent }}
+                                                titleStyle={{ color: Colors[theme].accent }}
+                                                onPress={showNext}
+                                            />
                                         </View>
                                     )}
                                 />
@@ -243,4 +246,11 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: '500',
     },
+    client: {
+        borderRadius: 5,
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+        fontSize: 14,
+        fontWeight: '500',
+    }
 })

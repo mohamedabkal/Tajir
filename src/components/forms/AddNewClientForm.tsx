@@ -34,11 +34,11 @@ const schema = yup.object().shape({
         .string()
         .required(),
     phoneNumber: yup
-        .number()
-        // .test({
-        //     name: 'len',
-        //     test: (value) => value?.toString().length === 10,
-        // })
+        .string()
+        .test({
+            name: 'len',
+            test: (value) => value?.toString().length === 10,
+        })
         .required(),
 });
 
@@ -54,7 +54,7 @@ export default function AddNewClientForm(props: Props) {
 
     const theme = useColorScheme();
     const { t } = useTranslation();
-    const { handleSubmit, control, watch } = useForm({
+    const { handleSubmit, control } = useForm({
         resolver: yupResolver(schema),
         defaultValues: useMemo(() => {
             return defaultValues;
@@ -97,7 +97,7 @@ export default function AddNewClientForm(props: Props) {
 
             {/* Phone Number */}
             <TextInput
-                name='total'
+                name='phoneNumber'
                 control={control}
                 label={t('clients.add.phone_number')}
                 // placeholder='0'
@@ -107,7 +107,7 @@ export default function AddNewClientForm(props: Props) {
 
             <Button
                 title={isSupplierForm ? t('suppliers.add.add_supplier') : t('clients.add.add_client')}
-                onPress={handleSubmit(data => console.log(data))}
+                onPress={handleSubmit(submit)}
                 containerStyle={{ marginTop: 32 }}
                 loading={loading}
             />

@@ -94,8 +94,8 @@ const DATA = [
 export default function SelectClientForm(props: Props) {
     const { loading, goBack, currentStore, showNext } = props;
 
-    const [data] = useState(currentStore.clients);
-    const [filterData, setFilterData] = useState(DATA);
+    const [data, setData] = useState(currentStore.clients);
+    const [filterData, setFilterData] = useState(data);
     const [selectedClient, setSelectedClient] = useState<Client>();
     const [clientName, setClientName] = useState<string>('');
     const [showNotFound, setShowNotFound] = useState(false);
@@ -112,10 +112,11 @@ export default function SelectClientForm(props: Props) {
         return () => backHandler.remove();
     }, []);
 
-    useEffect(() => filterClients(), [clientName]);
+    useEffect(() => filterClients(), [clientName, data]);
+    useEffect(() => setData(currentStore.clients), [currentStore]);
 
 
-    const saveClient = () => props.saveClient(selectedClient);
+    const saveClient = () => selectedClient ? props.saveClient(selectedClient) : null;
 
     const { control } = useForm();
 

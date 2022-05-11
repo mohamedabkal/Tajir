@@ -1,6 +1,6 @@
-// 
+import { StyleSheet } from "react-native";
 
-export const en = {
+export const en = StyleSheet.create({
     h1: {
         fontSize: 24,
         fontWeight: '700',
@@ -29,4 +29,4 @@ export const en = {
         fontSize: 10,
         fontWeight: '400',
     },
-}
+})

@@ -16,7 +16,7 @@ type Props = {
     containerStyle?: ViewStyle;
     style?: ViewStyle;
     header?: boolean;
-    status?: string;
+    status?: boolean;
     formatPrice?: boolean;
     onPress?: () => void;
     iconName?: keyof typeof Feather.glyphMap;
@@ -28,7 +28,7 @@ export const Status = React.memo((props: Props) => {
     const { status, label } = props;
     const theme = useColorScheme();
     const statusColor =
-        status === 'paid' ?
+        status ?
             Colors[theme].success :
             Colors[theme].error;
 

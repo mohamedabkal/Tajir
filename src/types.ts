@@ -61,6 +61,7 @@ export type Sale = {
     buyingPrice: number;
     paid: boolean;
     clientId: string;
+    date: number;
 };
 
 export type Invoice = {
@@ -90,4 +91,6 @@ export type Client = {
     id: string;
     name: string;
     phoneNumber: string;
-}
+};
+
+export type TimeRange = 'today' | 'month' | 'year';

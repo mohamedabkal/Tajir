@@ -16,6 +16,20 @@ export const addStoreToDB = async (store: Store) => {
 };
 
 
+export const updateStoreData = async (storeData: Store) => {
+    const { id } = storeData;
+    try {
+        await firestore()
+            .collection('stores')
+            .doc(id)
+            .set(storeData)
+        __DEV__ && console.log('✅ store data updated');
+    } catch (error) {
+        __DEV__ && console.log('⛔⛔ ERROR UPDATE USER DATA', error);
+    }
+};
+
+
 export const fetchStoresData = async (id: string) => {
     return firestore()
         .collection('stores')
