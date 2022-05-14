@@ -31,6 +31,20 @@ const defaultFormData = {
 }
 
 
+/**
+ * 🔰 Steps to explain the auth process
+ * 
+ * Creating a new user:
+ *  - Enter user information
+ *  - Send verifcation code
+ *  - Add user to database and show next step
+ * 
+ * Existing user
+ *  - Enter phone number
+ *  - Verify phone number & send verifcation code
+ *  - login
+ */
+
 
 export default function OnBoarding({ navigation }: { navigation: NativeStackNavigationProp<any, any> }) {
     const theme = useColorScheme();
