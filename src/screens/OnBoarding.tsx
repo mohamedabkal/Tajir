@@ -1,4 +1,4 @@
-import React, { useEffect, useState, } from 'react';
+import React, { useState, } from 'react';
 import { SafeAreaView, StyleSheet, View, } from 'react-native';
 
 import auth from '@react-native-firebase/auth';
@@ -15,7 +15,7 @@ import SignInForm from '../components/forms/SignInForm';
 import Button from '../components/buttons/Button';
 import Carousel from '../components/Carousel';
 import CodeConfirmationFrom from '../components/forms/CodeConfirmationFrom';
-import { Snackbar } from 'react-native-paper';
+import { DefaultTheme, Snackbar } from 'react-native-paper';
 
 
 type AuthFormTypes = {
@@ -40,31 +40,16 @@ export default function OnBoarding({ navigation }: { navigation: NativeStackNavi
     const userData = useStore(state => state.userData);
     const updateUserData = useStore(state => state.updateUserData);
     const setIsSignedIn = useStore(state => state.setIsSignedIn);
-    const isSignedIn = useStore(state => state.isSignedIn);
+    const authType = useStore(state => state.authType);
+    const setAuthType = useStore(state => state.setAuthType);
 
     const [showCodeConfInput, setShowCodeConfInput] = useState<boolean>(false),
         [confirm, setConfirm] = useState<any>(null),
         [formData, setFormData] = useState<AuthFormTypes>(defaultFormData),
         [loading, setLoading] = useState<boolean>(false),
-        [showLoginForm, setShowLoginForm] = useState(false),
         [savePhoneNumber, setSavePhoneNumber] = useState<string>(''),
         [toastVisible, setToastVisible] = useState<boolean>(false),
         [toastMessage, setToastMessage] = useState<string>('');
-
-
-    useEffect(() => {
-        auth().onAuthStateChanged((user) => {
-            if (user?.uid) {
-                if (showLoginForm) {
-                    console.log('>>>>>>>> FETCH USER DATA', showLoginForm)
-                    fetchUser();
-                } else {
-                    console.log('>>>>>>>> CREATE USER DATA', showLoginForm)
-                    createUserData();
-                }
-            }
-        });
-    }, []);
 
 
     const sendVerification = async (formValues: AuthFormTypes) => {
@@ -78,14 +63,16 @@ export default function OnBoarding({ navigation }: { navigation: NativeStackNavi
             setShowCodeConfInput(true);
             setLoading(false);
         } catch (err) {
+            setToastVisible(true);
+            setToastMessage(t('commn.error'));
             __DEV__ && console.error('>>>>>', err);
             setLoading(false);
         }
     };
 
     const formatPhoneNumber = (phoneNumber: string | number) => {
-        const clean = ('' + phoneNumber.toString()).replace(/\D/g, '');
-        const toArray = clean.match(/^(\d{3})(\d{3})(\d{4})$/);
+        const clean = ('' + phoneNumber?.toString())?.replace(/\D/g, '');
+        const toArray = clean?.match(/^(\d{3})(\d{3})(\d{4})$/);
         const format = `+212 ${toArray[1]}-${toArray[2]}-${toArray[3]}`;
         return format;
     }
@@ -94,15 +81,16 @@ export default function OnBoarding({ navigation }: { navigation: NativeStackNavi
         setLoading(true);
         try {
             await confirm.confirm(values.confirmationCode);
-            // if new user => create new user data : fetch data
-            if (showLoginForm) {
+            if (authType === 'signin') {
                 fetchUser();
             } else {
                 createUserData();
             }
             setLoading(false);
         } catch (err) {
-            __DEV__ && console.error('<<<<<<', err)
+            setToastVisible(true);
+            setToastMessage(t('common.error'));
+            __DEV__ && console.error('🛑', err);
             setLoading(false);
         }
     };
@@ -110,11 +98,11 @@ export default function OnBoarding({ navigation }: { navigation: NativeStackNavi
     const createUserData = async () => {
         const newUserData = {
             ...userData,
-            id: uuid.v4(),
+            id: uuid.v4().toString(),
             info: {
-                firstName: 'Mohammad', //formData.firstName,
-                lastName: 'Abkal', //formData.lastName,
-                phoneNumber: '+212 077-034-0780', //savePhoneNumber,
+                firstName: formData.firstName,
+                lastName: formData.lastName,
+                phoneNumber: savePhoneNumber,
             },
         };
         // add user to DB
@@ -127,25 +115,36 @@ export default function OnBoarding({ navigation }: { navigation: NativeStackNavi
     }
 
     const fetchUser = async () => {
-        if (!isSignedIn) {
-            try {
-                const fetchData = await fetchUserData(savePhoneNumber);
-                if (fetchData) {
-                    const newUserData = fetchData;
-                    // store userData locally
-                    updateUserData(newUserData);
-                    setIsSignedIn(true);
-                } else {
-                    setToastVisible(true);
-                    setToastMessage('Phone number was not found!');
-                    auth().signOut();
-                }
-            } catch (err) {
-                __DEV__ && console.error(err);
-                setLoading(false);
+        try {
+            const fetchData = await fetchUserData(savePhoneNumber);
+            if (fetchData) {
+                const newUserData = fetchData;
+                // store userData locally
+                updateUserData(newUserData);
+                setIsSignedIn(true);
+            } else {
+                setToastVisible(true);
+                setToastMessage(t('onBoarding.not_found'));
+                auth().signOut();
             }
+        } catch (err) {
+            __DEV__ && console.error(err);
         }
+    };
+
+    const verifyPhoneNumber = async (formValues: AuthFormTypes) => {
+        setLoading(true);
+        const phoneNumber = formatPhoneNumber(formValues.phoneNumber);
+        const fetchData = await fetchUserData(phoneNumber);
+        if (fetchData) {
+            sendVerification(formValues);
+        } else {
+            setToastVisible(true);
+            setToastMessage(t('onBoarding.not_found'));
+        }
+        setLoading(false);
     }
+
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -162,9 +161,9 @@ export default function OnBoarding({ navigation }: { navigation: NativeStackNavi
                         isVisible={showCodeConfInput}
                         resendCode={() => sendVerification(savePhoneNumber)}
                     />
-                ) : showLoginForm ? (
+                ) : authType === 'signin' ? (
                     <SignInForm
-                        sendCode={sendVerification}
+                        sendCode={verifyPhoneNumber}
                         loading={loading}
                     />
                 ) : (
@@ -176,8 +175,8 @@ export default function OnBoarding({ navigation }: { navigation: NativeStackNavi
 
                 {!showCodeConfInput && (
                     <Button
-                        title={showLoginForm ? t('onBoarding.signup') : t('onBoarding.login')}
-                        onPress={() => setShowLoginForm(!showLoginForm)}
+                        title={authType === 'signin' ? t('onBoarding.signup') : t('onBoarding.login')}
+                        onPress={() => setAuthType(authType === 'signin' ? 'signup' : 'signin')}
                         containerStyle={{ marginHorizontal: 16, backgroundColor: Colors[theme].tint }}
                         loading={loading}
                         titleStyle={{ color: Colors[theme].accent }}
@@ -187,8 +186,10 @@ export default function OnBoarding({ navigation }: { navigation: NativeStackNavi
                 <Snackbar
                     visible={toastVisible}
                     onDismiss={() => setToastVisible(false)}
+                    style={{ backgroundColor: Colors[theme].primary }}
+                    theme={{ ...DefaultTheme, colors: { ...DefaultTheme.colors, accent: Colors[theme].accent } }}
                     action={{
-                        label: 'Close',
+                        label: t('common.close'),
                         onPress: () => setToastVisible(false)
                     }}>
                     {toastMessage}

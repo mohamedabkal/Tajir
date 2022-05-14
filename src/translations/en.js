@@ -4,7 +4,9 @@ export default {
         paid: 'Paid',
         not_paid: 'Not Paid',
         days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-        save_changes: 'Save Changes'
+        save_changes: 'Save Changes',
+        close: 'Close',
+        error: 'An error occurred. Please try again',
     },
     home: {
         welcome: "Hello",
@@ -118,6 +120,9 @@ export default {
         confirm: 'Confirm',
         start: 'Start Now!',
         login: 'Already have an account? Sign-in',
-        signup: 'Create account'
+        signup: 'Create account',
+        not_found: 'Phone number was not found!',
+        resend_timeout: 'Resend in',
+        resend: 'Resend code',
     }
 }

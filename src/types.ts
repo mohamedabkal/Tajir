@@ -94,3 +94,5 @@ export type Client = {
 };
 
 export type TimeRange = 'today' | 'month' | 'year';
+
+export type AuthType = 'signup' | 'signin';

@@ -40,7 +40,7 @@ export const fetchUserData = async (phoneNumber: number | string) => {
                 __DEV__ && console.log('🚫 No such document! => fetchUserData');
                 return false;
             } else {
-                __DEV__ && console.log('✅✅ Fetch user by email >> success!')
+                __DEV__ && console.log('✅✅ Fetch user by phoneNumber >> success!')
                 const newUserData = querySnapshot.docs[0].data();
                 return newUserData;
             }

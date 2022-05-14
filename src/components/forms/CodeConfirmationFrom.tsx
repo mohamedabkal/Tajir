@@ -98,7 +98,7 @@ export default function CodeConfirmationFrom(props: Props) {
             />
 
             <Button
-                title={timerCount > 0 ? `Resend in ${timerCount}` : t('onBoarding.confirm')}
+                title={timerCount > 0 ? `${t('onBoarding.resend_timeout')} ${timerCount}` : t('onBoarding.resend')}
                 onPress={resendCode}
                 containerStyle={{ marginHorizontal: 16, backgroundColor: Colors[theme].tint }}
                 titleStyle={{ color: Colors[theme].accent }}
